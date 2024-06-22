@@ -1,1 +1,1 @@
-import manager
+import conda_manager
