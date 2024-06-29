@@ -52,7 +52,6 @@ class CondaManagerApp:
                                                                                                                  padx=5,
                                                                                                                  pady=5)
 
-
         tk.Label(env_frame, text="Pip Install:").grid(row=2, column=1, padx=5, pady=5)
         self.pip_install_entry = tk.Entry(env_frame)
         self.pip_install_entry.grid(row=2, column=2, padx=5, pady=5)
@@ -60,10 +59,11 @@ class CondaManagerApp:
                                                                             padx=5, pady=5)
 
         tk.Button(env_frame, text="Start Jupyter Lab", command=self.start_jupyter).grid(row=3, column=2, columnspan=1,
-                                                                            padx=5, pady=5)
-
-        tk.Button(env_frame, text="Install To Jupyter Lab", command=self.install_to_jupyter).grid(row=3, column=3, columnspan=1,
                                                                                         padx=5, pady=5)
+
+        tk.Button(env_frame, text="Install To Jupyter Lab", command=self.install_to_jupyter).grid(row=3, column=3,
+                                                                                                  columnspan=1,
+                                                                                                  padx=5, pady=5)
         # Create a frame for output
         output_frame = tk.LabelFrame(self.root, text="Output", padx=10, pady=10)
         output_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
@@ -86,7 +86,7 @@ class CondaManagerApp:
 
         # subprocess.Popen 以非阻塞方式运行 PowerShell 命令，并使用一个线程将输出行写入队列。
         process = subprocess.Popen(target_command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
-                                        bufsize=1)
+                                   bufsize=1)
         process.daemon = True
 
         thread = threading.Thread(target=enqueue_output, args=(process, self.output_queue))
@@ -152,18 +152,15 @@ class CondaManagerApp:
                 self.output_queue.put(f"File selected: \n{self.file_path}\n")
 
     def start_jupyter(self):
-            self.run_conda_command(f"conda deactivate; conda activate jupyter_env; jupyter lab")
-
+        self.run_conda_command(f"conda deactivate; conda activate jupyter_env; jupyter lab")
 
     def install_to_jupyter(self):
         env_name = self.env_name_entry.get().strip()
         if env_name != "":
-            self.run_conda_command(f"conda deactivate; conda activate {env_name}; pip install ipykernel; python -m ipykernel install --user --name {env_name} --display-name {env_name}")
+            self.run_conda_command(
+                f"conda deactivate; conda activate {env_name}; pip install ipykernel; python -m ipykernel install --user --name {env_name} --display-name {env_name}")
         else:
             messagebox.showwarning("Install To Jupyter Error", "Please enter a valid environment name")
 
 
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = CondaManagerApp(root)
-    root.mainloop()
+
